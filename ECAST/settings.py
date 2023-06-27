@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'committee',
     'rest_framework',
+    'intake_form',
 ]
 
 MIDDLEWARE = [
