@@ -25,7 +25,7 @@ python manage.py runserver
 
 •	Browse the following endpoint and perform CRUD operations on it:
 ```
-http://127.0.0.1:8000/api/committee/
+http://127.0.0.1:8000/api/members/
 ```
 
 			
