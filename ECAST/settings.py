@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'event',
+    'intake_form',
     'projects.apps.ProjectsConfig',
 ]
 
