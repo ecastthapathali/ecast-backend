@@ -30,18 +30,15 @@ class Intake(models.Model):
 
     roll = models.CharField(max_length=12, unique=True)
     name = models.CharField(max_length=100)
-    faculty = models.CharField(max_length=5, choices=FACULTY, null=True)     
-    batch = models.CharField(max_length=5, choices=BATCH, null=True)
-    email = models.EmailField(null=True)
-    contact = models.CharField(max_length=14, null=True)
-    introduction = models.TextField(null=True)
-    position= models.CharField(max_length=25, choices=POSITION, null=True)
+    email = models.EmailField(null=False)
+    contact = models.CharField(max_length=14, null=False)
+    describe_yourself = models.TextField(null = False)
+    position= models.CharField(max_length=25, choices=POSITION, null=False)
     cv = models.FileField(upload_to='intake_cv/', blank=True)                   
-    opinion = models.TextField(null=True, blank=True)                       
-    facebook = models.URLField(blank=True)
-    linkedin = models.URLField(blank=True)
-    github = models.URLField(blank=True)
-
+    hope_to_gain = models.TextField(null=False) 
+    interest = models.TextField(null=True, blank=True) 
+    other = models.TextField(null=True, blank=True) 
+    social_media = models.URLField(blank=True)
 
 
 def __str__(self):
