@@ -8,4 +8,4 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 
-admin.site.register(Project)
+admin.site.register(Project, ProjectAdmin)
