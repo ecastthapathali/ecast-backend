@@ -10,6 +10,7 @@ urlpatterns = [
     path('api/event/', include('event.urls')),
     path('api/project/', include('projects.urls')),
     path('api/intake/', include('intake.urls')),
+    path("api/content/",include("content_writing.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
