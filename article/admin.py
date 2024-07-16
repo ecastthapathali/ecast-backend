@@ -3,8 +3,8 @@ from .models import ArticleForm
 
 
 class ArticleFormAdmin(admin.ModelAdmin):
-    list_display = ["name", "email", "college_name"]
-    list_filter = ["name", "college_name"]
+    list_display = ["name", "college_name", "title"]
+    list_filter = ["name", "college_name", "theme"]
 
 
 

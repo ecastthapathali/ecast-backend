@@ -1,14 +1,26 @@
 from django.db import models
 import uuid
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
-# def file_validator(file):
-#     if file.size > 5*1024*1024:
-#         raise ValidationError('File size should be less than 5MB')
-#     if file.name.split('.')[-1] not in ['pdf']:
-#         raise ValidationError('Only pdf files are allowed')
+theme_choices = [
+    ('Emerging Technologies','Emerging Technologies'),
+    ('Artificial Intelligence and Machine Learning', 'Artificial Intelligence and Machine Learning'),
+    ('Cybersecurity and Privacy', 'Cybersecurity and Privacy'),
+    ('Innovation and Future Trends', 'Innovation and Future Trends'),
+    ('Technology in Society', 'Technology in Society')
+]
 
+def file_validator(file):
+    # if file.size > 5*1024*1024:
+    #     raise ValidationError('File size should be less than 5MB')
+    if file.name.split('.')[-1] not in ['pdf', 'doc', 'docx']:
+        raise ValidationError('Only docs or pdf files are allowed')
+
+def word_count_validator(value):
+    if value < 800 or value > 1200:
+        raise ValidationError('NUmber of words is Invalid!')
 
 
 class ArticleForm(models.Model):
@@ -20,8 +32,8 @@ class ArticleForm(models.Model):
     college_name = models.CharField(max_length=100)
     
     title = models.CharField(max_length=100)
-    theme = models.CharField(max_length=100)
-    word_count = models.CharField(max_length=10)
+    theme = models.CharField(max_length=100, choices=theme_choices)
+    word_count = models.IntegerField(validators=[word_count_validator])
     
     abstract = models.TextField()
     keywords = models.TextField()
@@ -33,7 +45,8 @@ class ArticleForm(models.Model):
     question_1 = models.TextField()
     question_2 = models.TextField()
     
-    # article_file = models.FileField(upload_to='articles/', null=False, blank=False, validators=[file_validator])
+    article_file = models.FileField(upload_to='articles/', null=False, blank=False, validators=[file_validator])
+    
     # facebook_link = models.URLField(blank=True, null=True)
     # suggestion = models.TextField()
     
