@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'intake.apps.IntakeConfig',
     'committee.apps.CommitteeConfig',
+    'article.apps.ArticleConfig',
 ]
 
 MIDDLEWARE = [
