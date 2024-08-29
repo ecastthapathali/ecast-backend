@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'intake.apps.IntakeConfig',
     'committee.apps.CommitteeConfig',
     'article.apps.ArticleConfig',
+    'contact.apps.ContactConfig',
 ]
 
 MIDDLEWARE = [
