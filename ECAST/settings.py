@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'committee.apps.CommitteeConfig',
     'article.apps.ArticleConfig',
     'contact.apps.ContactConfig',
+    'registration.apps.RegistrationConfig',
 ]
 
 MIDDLEWARE = [

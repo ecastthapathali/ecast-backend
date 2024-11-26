@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/intake/', include('intake.urls')),
     path('api/article/', include('article.urls')),
     path('api/contact/', include('contact.urls')),
+    path('api/registration/', include('registration.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
