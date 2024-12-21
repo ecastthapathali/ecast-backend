@@ -1,4 +1,11 @@
+asgiref==3.8.1
+certifi==2024.12.14
+cloudinary==1.41.0
 Django==4.0
-djangorestframework==3.14.0
 django-cors-headers==3.14.0
+djangorestframework==3.14.0
 Pillow==10.0.0
+pytz==2024.2
+six==1.17.0
+sqlparse==0.5.3
+urllib3==2.2.3
