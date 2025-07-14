@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from .models import IntakeForm
 from .serializer import IntakeFormSerializer
-# import CREATE LIST UPDATE APIView
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.response import Response

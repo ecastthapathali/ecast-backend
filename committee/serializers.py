@@ -1,56 +1,42 @@
 from rest_framework import serializers
-from .models import CommitteeMember,SocialMedia
-import uuid
+from .models import CommitteeMember, SocialMedia
 
-
-
-
-class SocialMediaReadSerializer(serializers.ModelSerializer):
-    # user = serializers.CharField(source='user.name', read_only=True)
+class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = SocialMedia
-        fields = ('platform', 'handle')
+        fields = ('id', 'platform', 'handle')
 
+class CommitteeMemberSerializer(serializers.ModelSerializer):
+    social_media = SocialMediaSerializer(many=True)  # related_name="social_media"
 
-class CommitteeMemberReadSerializer(serializers.ModelSerializer):
-    # position = serializers.CharField(source='position.position', read_only=True)
-    social_media = SocialMediaReadSerializer(many=True, read_only=True)
     class Meta:
         model = CommitteeMember
-        depth = 1
-        fields = ('id', 'name', 'position','started_from', 'tenure', 'memberPhoto',  'social_media')
+        fields = ('id', 'name', 'position', 'started_from', 'tenure', 'memberPhoto', 'social_media')
         
-
-class CommitteMemberWriteSerializer(serializers.ModelSerializer):
-    # position = MemberPositionReadSerializer()
-    social_media = SocialMediaReadSerializer(many=True)
-
-    class Meta:
-        model = CommitteeMember
-        fields = ('name', 'position', 'started_from', 'tenure', 'memberPhoto', 'social_media')
-
     def create(self, validated_data):
-        print(validated_data)
-        # position = validated_data.pop('position')
-        # print(position)
-        social_media = validated_data.pop('social_media')
-        # position, created = MemberPosition.objects.get_or_create(**position)
-        
-        committee_member = CommitteeMember.objects.create(**validated_data)
-        for social in social_media:
-            SocialMedia.objects.create(user=committee_member, **social)
-        return committee_member
-    
+        social_media_data = validated_data.pop('social_media')
+        print("Social Media Data:", social_media_data)
+        member = CommitteeMember.objects.create(**validated_data)
+        print("Created Member:", member)
+        for sm in social_media_data:
+            print("Creating Social Media for Member:", sm)
+            SocialMedia.objects.create(user=member, **sm)
+        return member
+
     def update(self, instance, validated_data):
-        # position = validated_data.pop('position')
-        social_media = validated_data.pop('social_media')
-        # position, created = MemberPosition.objects.get_or_create(**position)
-        # instance.position = position
-        instance.name = validated_data.get('name', instance.name)
-        instance.started_from = validated_data.get('started_from', instance.started_from)
-        instance.tenure = validated_data.get('tenure', instance.tenure)
-        instance.memberPhoto = validated_data.get('memberPhoto', instance.memberPhoto)
+        social_media_data = validated_data.pop('social_media', None)
+        print("Updating Member:", instance)
+        # Update member fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+            print(f"Updated {attr} to {value} of Member:", instance)
         instance.save()
-        for social in social_media:
-            SocialMedia.objects.create(user=instance, **social)
+
+        if social_media_data:
+            # Clear existing social links
+            instance.social_media.all().delete()
+            for sm in social_media_data:
+                print("Creating Social Media for Updated Member:", sm)
+                SocialMedia.objects.create(user=instance, **sm)
+
         return instance

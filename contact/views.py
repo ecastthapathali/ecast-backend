@@ -9,9 +9,8 @@ class ContactFormListCreate(generics.ListCreateAPIView):
     serializer_class = ContactFormSerializer
 
     def perform_create(self, serializer):
-       
         serializer.save()
-
+        
     def create(self, request, *args, **kwargs):
         try:
             return super().create(request, *args, **kwargs)

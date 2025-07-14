@@ -36,8 +36,7 @@ class CommitteeMember(models.Model):
     position = models.CharField(max_length=50, choices=(position_choices))
     started_from = models.DateField(null=False, blank=False)
     tenure = models.PositiveIntegerField()
-    memberPhoto = models.ImageField(
-        upload_to=member_image_path, null=True, blank=True)
+    memberPhoto = models.URLField(max_length=200, null=True, blank=True)
     # year = models.ForeignKey(MemberTenure, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -60,8 +59,8 @@ class SocialMedia(models.Model):
         return str(self.user.name) + " " + str(self.platform)
 
 
-@receiver(signals.post_delete, sender=CommitteeMember)
-def delete_social_media(sender, instance, **kwargs):
-    # delete the image & social media of the model
-    instance.memberPhoto.delete(save=False)
-    instance.social_media.all().delete()
+# @receiver(signals.post_delete, sender=CommitteeMember)
+# def delete_social_media(sender, instance, **kwargs):
+#     # delete the image & social media of the model
+#     instance.memberPhoto.delete(save=False)
+#     instance.social_media.all().delete()
