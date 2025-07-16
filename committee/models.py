@@ -18,14 +18,15 @@ position_choices = (
     ('President', 'President'),
     ('Vice President', 'Vice President'),
     ('Secretary', 'Secretary'),
-    ('Vice Secretary', 'Vice Secretary'),
-    ('Treasurer', 'Treasurer'),
+    ('Vice Secretary/Treasurer', 'Vice Secretary/Treasurer'),
     ('Vice Treasurer', 'Vice Treasurer'),
     ('Technical Team', 'Technical Team'),
-    ('Grahics Designer', 'Grahics Designer'),
-    ('HR & Communications', 'HR & Communications'),
-    ("Event's Manager", "Event's Manager"),
+    ('Graphics Designer', 'Graphics Designer'),
+    ('Communication,Events & HR', 'Communication,Events & HR'),
     ('Social Media Manager', 'Social Media Manager'),
+    ('Consultant', 'Consultant'),
+    ('Research and Development Team', 'Research and Development Team'),
+    ('Editor In Chief', 'Editor In Chief'),
 )
 
 
