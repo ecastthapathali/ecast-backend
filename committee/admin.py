@@ -17,6 +17,7 @@ class CommitteeMemberAdmin(admin.ModelAdmin):
     search_fields = ['name', 'position']
     readonly_fields = ['id', 'photo_preview']
     date_hierarchy = 'started_from'
+    list_per_page = 25
     
     fieldsets = (
         ('Member Information', {
