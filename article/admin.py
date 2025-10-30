@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django.http import HttpResponse
+import csv
 from .models import ArticleForm
 
 
@@ -10,6 +12,7 @@ class ArticleFormAdmin(admin.ModelAdmin):
     search_fields = ['name', 'email', 'title', 'college_name']
     readonly_fields = ['id', 'filled_date', 'file_link']
     date_hierarchy = 'filled_date'
+    actions = ['export_to_csv']
     
     fieldsets = (
         ('Personal Information', {
@@ -47,3 +50,24 @@ class ArticleFormAdmin(admin.ModelAdmin):
             return format_html('<a href="{}" target="_blank">Download Article File</a>', obj.article_file.url)
         return "-"
     file_link.short_description = 'File'
+    
+    def export_to_csv(self, request, queryset):
+        """Export selected article submissions to CSV"""
+        meta = self.model._meta
+        field_names = ['name', 'email', 'phone', 'college_name', 'title', 'theme', 
+                      'word_count', 'confirmation', 'agreement', 'filled_date']
+        
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=article_submissions.csv'
+        writer = csv.writer(response)
+        
+        # Write headers
+        writer.writerow(field_names)
+        
+        # Write data
+        for obj in queryset:
+            writer.writerow([getattr(obj, field) for field in field_names])
+        
+        return response
+    
+    export_to_csv.short_description = "📥 Export selected to CSV"

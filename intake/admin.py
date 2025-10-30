@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django.http import HttpResponse
+import csv
 from .models import IntakeForm
 
 
@@ -10,6 +12,7 @@ class IntakeFormAdmin(admin.ModelAdmin):
     search_fields = ['name', 'email', 'campus_roll']
     readonly_fields = ['id', 'filled_date', 'resume_link']
     date_hierarchy = 'filled_date'
+    actions = ['export_to_csv']
     
     fieldsets = (
         ('Personal Information', {
@@ -52,3 +55,23 @@ class IntakeFormAdmin(admin.ModelAdmin):
             return format_html('<a href="{}" target="_blank">Download Resume</a>', obj.resume.url)
         return "-"
     resume_link.short_description = 'Resume File'
+    
+    def export_to_csv(self, request, queryset):
+        """Export selected intake applications to CSV"""
+        field_names = ['name', 'email', 'phone', 'campus_roll', 'department', 'batch', 
+                      'post', 'github_link', 'linkedin_link', 'facebook_link', 'filled_date']
+        
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=intake_applications.csv'
+        writer = csv.writer(response)
+        
+        # Write headers
+        writer.writerow(field_names)
+        
+        # Write data
+        for obj in queryset:
+            writer.writerow([getattr(obj, field) for field in field_names])
+        
+        return response
+    
+    export_to_csv.short_description = "📥 Export selected to CSV"

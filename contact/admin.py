@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django.http import HttpResponse
+import csv
 from .models import ContactForm
 
 
@@ -10,6 +12,7 @@ class ContactFormAdmin(admin.ModelAdmin):
     search_fields = ['name', 'email', 'message']
     readonly_fields = ['id', 'name', 'email', 'message', 'submitted_at']
     date_hierarchy = 'submitted_at'
+    actions = ['export_to_csv']
     
     fieldsets = (
         ('Contact Information', {
@@ -37,3 +40,22 @@ class ContactFormAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         # Allow deletion but not addition
         return True
+    
+    def export_to_csv(self, request, queryset):
+        """Export selected contact messages to CSV"""
+        field_names = ['name', 'email', 'message', 'submitted_at']
+        
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=contact_messages.csv'
+        writer = csv.writer(response)
+        
+        # Write headers
+        writer.writerow(field_names)
+        
+        # Write data
+        for obj in queryset:
+            writer.writerow([getattr(obj, field) for field in field_names])
+        
+        return response
+    
+    export_to_csv.short_description = "📥 Export selected to CSV"
