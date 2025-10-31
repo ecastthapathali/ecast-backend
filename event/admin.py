@@ -22,13 +22,15 @@ class ImageInline(admin.TabularInline):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ['title', 'date', 'time', 'location', 'featured', 'coming_soon', 'registration_required']
+    list_display = ['title', 'date', 'time', 'location', 'featured', 'coming_soon', 'registration_required', 'attendee_count']
     list_filter = ['featured', 'coming_soon', 'registration_required', 'date']
-    search_fields = ['title', 'location', 'description']
+    search_fields = ['title', 'location', 'description', 'contact_email']
     readonly_fields = ['id', 'slug', 'image_preview']
     list_editable = ['featured', 'coming_soon']
     date_hierarchy = 'date'
     inlines = [ImageInline]
+    actions = ['mark_as_featured', 'mark_as_not_featured']
+    list_per_page = 20
     
     fieldsets = (
         ('Basic Information', {
@@ -51,6 +53,27 @@ class EventAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" width="200" height="150" style="object-fit: cover;" />', obj.image.url)
         return "-"
     image_preview.short_description = 'Image Preview'
+    
+    def attendee_count(self, obj):
+        """Display max attendees with visual indicator"""
+        if obj.max_attendees:
+            if obj.registration_required:
+                return format_html('<span style="background-color: #17a2b8; color: white; padding: 2px 8px; border-radius: 10px;">👥 {}</span>', obj.max_attendees)
+            return f"👥 {obj.max_attendees}"
+        return "-"
+    attendee_count.short_description = 'Max Attendees'
+    
+    def mark_as_featured(self, request, queryset):
+        """Mark selected events as featured"""
+        updated = queryset.update(featured=True)
+        self.message_user(request, f'{updated} event(s) marked as featured.')
+    mark_as_featured.short_description = "⭐ Mark as Featured"
+    
+    def mark_as_not_featured(self, request, queryset):
+        """Remove featured status from selected events"""
+        updated = queryset.update(featured=False)
+        self.message_user(request, f'{updated} event(s) unmarked as featured.')
+    mark_as_not_featured.short_description = "☆ Remove Featured"
 
 
 @admin.register(Newsletter)

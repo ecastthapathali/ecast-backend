@@ -13,6 +13,7 @@ class ContactFormAdmin(admin.ModelAdmin):
     readonly_fields = ['id', 'name', 'email', 'message', 'submitted_at']
     date_hierarchy = 'submitted_at'
     actions = ['export_to_csv']
+    list_per_page = 30
     
     fieldsets = (
         ('Contact Information', {

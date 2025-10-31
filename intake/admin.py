@@ -13,6 +13,7 @@ class IntakeFormAdmin(admin.ModelAdmin):
     readonly_fields = ['id', 'filled_date', 'resume_link']
     date_hierarchy = 'filled_date'
     actions = ['export_to_csv']
+    list_per_page = 25
     
     fieldsets = (
         ('Personal Information', {
