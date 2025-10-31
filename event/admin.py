@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django.http import HttpResponse
+import csv
 from .models import Event, Newsletter, Image
 
 # Register your models here.
@@ -58,6 +60,7 @@ class NewsletterAdmin(admin.ModelAdmin):
     list_filter = ['for_event']
     readonly_fields = ['id']
     autocomplete_fields = ['for_event']
+    actions = ['export_to_csv']
     
     def event_name(self, obj):
         return obj.for_event.title
@@ -67,6 +70,23 @@ class NewsletterAdmin(admin.ModelAdmin):
     def formatted_id(self, obj):
         return str(obj.id)[:8]
     formatted_id.short_description = 'ID'
+    
+    def export_to_csv(self, request, queryset):
+        """Export selected newsletter subscriptions to CSV"""
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=newsletter_subscriptions.csv'
+        writer = csv.writer(response)
+        
+        # Write headers
+        writer.writerow(['Name', 'Email', 'Event', 'Subscription ID'])
+        
+        # Write data
+        for obj in queryset:
+            writer.writerow([obj.name, obj.email, obj.for_event.title, str(obj.id)])
+        
+        return response
+    
+    export_to_csv.short_description = "📥 Export selected to CSV"
 
 
 @admin.register(Image)
